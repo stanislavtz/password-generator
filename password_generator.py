@@ -15,7 +15,7 @@ def insert_random(number, chars_collection, password_chars):
         password_chars.append(random.choice(chars_collection))
 
 
-def password_generator():
+def generator():
     """Generates random password by given sequence of chars."""
     password_chars = []
 

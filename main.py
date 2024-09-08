@@ -1,23 +1,26 @@
 from tkinter import *
-from password_generator import password_generator
+from password_generator import generator
+
 FONT = ("Courier", 11)
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
-	password = password_generator()
+	password = generator()
 	password_entry.delete(0, END)
 	password_entry.insert(0, password)
 
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_data():
-	username = username_entry.get()
 	website = website_entry.get()
+	username = username_entry.get()
 	password = password_entry.get()
 	try:
 		with open("../data.txt", mode="a") as file:
-			file.write(f"{username} | {website} | {password}\n")
+			file.write(f"{website} | {username} | {password}\n")
+			website_entry.delete(0, END)
+			password_entry.delete(0, END)
 	except FileNotFoundError as e:
 		print(e)
 

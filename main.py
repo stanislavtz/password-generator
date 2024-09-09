@@ -70,10 +70,14 @@ def search_for_credentials():
 		except FileNotFoundError:
 			messagebox.showinfo(title="ERROR", message=f"File {file_name} does not exist")
 		else:
-			website_data = credentials_data[searched_website]
-			username = website_data["Username"]
-			password = website_data["Password"]
-			messagebox.showinfo(title=f"{searched_website} credentials", message=f"Username: {username}\n"
+			try:
+				website_data = credentials_data[searched_website]
+			except KeyError:
+				messagebox.showinfo(title="ERROR", message=f"You don't have any records for {searched_website} website")
+			else:
+				username = website_data["Username"]
+				password = website_data["Password"]
+				messagebox.showinfo(title=f"{searched_website} credentials", message=f"Username: {username}\n"
 																				 f"Password: {password}")
 
 # ---------------------------- UI SETUP ------------------------------- #

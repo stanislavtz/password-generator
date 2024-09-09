@@ -1,4 +1,6 @@
 from tkinter import *
+from tkinter import messagebox
+
 from password_generator import generator
 
 FONT = ("Courier", 11)
@@ -16,13 +18,20 @@ def save_data():
 	website = website_entry.get()
 	username = username_entry.get()
 	password = password_entry.get()
-	try:
-		with open("../data.txt", mode="a") as file:
-			file.write(f"{website} | {username} | {password}\n")
-			website_entry.delete(0, END)
-			password_entry.delete(0, END)
-	except FileNotFoundError as e:
-		print(e)
+
+	if len(username) == 0 or len(password) == 0 or len(website) == 0:
+		messagebox.showinfo(title="Empty inputs", message="Empty entries aren't allowed!")
+	else:
+		is_ok = messagebox.askokcancel(title="Confirm credentials", message=f"Are oyu sure you would like to save the\n"
+																	f"username: {username}\npassword: {password}")
+		if is_ok:
+			try:
+				with open("data.txt", mode="a") as file:
+					file.write(f"{website} | {username} | {password}\n")
+					website_entry.delete(0, END)
+					password_entry.delete(0, END)
+			except FileNotFoundError as e:
+				print(e)
 
 
 # ---------------------------- UI SETUP ------------------------------- #

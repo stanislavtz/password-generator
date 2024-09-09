@@ -1,6 +1,12 @@
 from tkinter import *
 from tkinter import messagebox
 
+import json
+
+from Cryptodome.SelfTest.Cipher.test_CFB import file_name
+from numpy.ma.core import identity
+from sqlalchemy.testing.config import ident
+
 from password_generator import generator
 
 FONT = ("Courier", 12)
@@ -15,9 +21,16 @@ def generate_password():
 
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save_data():
-	website = website_entry.get()
+	website = website_entry.get().title()
 	username = username_entry.get()
 	password = password_entry.get()
+
+	new_data = {
+		website: {
+			"Username": username,
+			"Password": password
+		}
+	}
 
 	if len(username) == 0 or len(password) == 0 or len(website) == 0:
 		messagebox.showinfo(title="Warning", message="Empty entries aren't allowed!")
@@ -25,10 +38,23 @@ def save_data():
 		is_ok = messagebox.askokcancel(title=f"{website}", message=f"Are you sure you would like to save the\n"
 																	f"Username: {username}\nPassword: {password}")
 		if is_ok:
-			with open("data.txt", mode="a") as file:
-				file.write(f"{website} | {username} | {password}\n")
-				website_entry.delete(0, END)
-				password_entry.delete(0, END)
+			file_name = "data.json"
+			try:
+				with open(file_name, "r") as file_data:
+					current_data = json.load(file_data)
+					current_data.update(new_data)
+			except FileNotFoundError:
+				to_create_file = messagebox.askokcancel(title="ERROR", message=f"File {file_name} does not exist.\n"
+															  f"Do you want to create it?")
+				if to_create_file:
+					with open("data.json", "w") as file_data:
+						json.dump(new_data, file_data, indent=4)
+			else:
+				with open("data.json", "w") as file_data:
+					json.dump(current_data, file_data, indent=4)
+
+					website_entry.delete(0, END)
+					password_entry.delete(0, END)
 
 
 # ---------------------------- SEARCH FOR USERNAME AND PASSWORD ------------------------------- #
@@ -37,11 +63,12 @@ def search_for_credentials():
 	if len(searched_website) == 0:
 		messagebox.showinfo(title="Warning", message="Empty entries aren't allowed!")
 	else:
+		file_name = "data.txt"
 		try:
-			with open("data.txt") as file:
+			with open(file_name) as file:
 				credentials_data = file.readlines()
 		except FileNotFoundError:
-			messagebox.showinfo(title="ERROR", message=f"File data.txt does not exist")
+			messagebox.showinfo(title="ERROR", message=f"File {file_name} does not exist")
 		else:
 			website_data = [data for data in credentials_data if searched_website in data][0]
 			username = website_data.split("|")[1].strip()

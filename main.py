@@ -53,10 +53,10 @@ password_label = Label(text="Password:", font=FONT)
 password_label.grid(row=3, column=0)
 
 # Entries
-website_entry = Entry(width=55)
+website_entry = Entry(width=58)
 website_entry.focus()
 website_entry.grid(row=1, column=1, columnspan=2)
-username_entry = Entry(width=55)
+username_entry = Entry(width=58)
 username_entry.grid(row=2, column=1, columnspan=2)
 password_entry = Entry(width=32)
 password_entry.grid(row=3, column=1)
@@ -64,7 +64,7 @@ password_entry.grid(row=3, column=1)
 # Buttons
 generate_btn = Button(text="Generate Pass", font=FONT, width=14, command=generate_password)
 generate_btn.grid(row=3, column=2)
-add_btn = Button(text="Add", font=FONT, width=37, command=save_data)
+add_btn = Button(text="Add", font=FONT, width=35, command=save_data)
 add_btn.grid(row=4, column=1, columnspan=2)
 
 

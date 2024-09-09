@@ -63,16 +63,16 @@ def search_for_credentials():
 	if len(searched_website) == 0:
 		messagebox.showinfo(title="Warning", message="Empty entries aren't allowed!")
 	else:
-		file_name = "data.txt"
+		file_name = "data.json"
 		try:
-			with open(file_name) as file:
-				credentials_data = file.readlines()
+			with open(file_name, "r") as file:
+				credentials_data = json.load(file)
 		except FileNotFoundError:
 			messagebox.showinfo(title="ERROR", message=f"File {file_name} does not exist")
 		else:
-			website_data = [data for data in credentials_data if searched_website in data][0]
-			username = website_data.split("|")[1].strip()
-			password = website_data.split("|")[2].strip()
+			website_data = credentials_data[searched_website]
+			username = website_data["Username"]
+			password = website_data["Password"]
 			messagebox.showinfo(title=f"{searched_website} credentials", message=f"Username: {username}\n"
 																				 f"Password: {password}")
 

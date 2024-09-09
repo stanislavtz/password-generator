@@ -3,7 +3,7 @@ from tkinter import messagebox
 
 from password_generator import generator
 
-FONT = ("Courier", 12)
+FONT = ("Courier", 14)
 
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #

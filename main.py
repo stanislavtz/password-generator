@@ -20,9 +20,9 @@ def save_data():
 	password = password_entry.get()
 
 	if len(username) == 0 or len(password) == 0 or len(website) == 0:
-		messagebox.showinfo(title="Empty inputs", message="Empty entries aren't allowed!")
+		messagebox.showinfo(title="Warning", message="Empty entries aren't allowed!")
 	else:
-		is_ok = messagebox.askokcancel(title="Confirm credentials", message=f"Are oyu sure you would like to save the\n"
+		is_ok = messagebox.askokcancel(title=f"{website}", message=f"Are oyu sure you would like to save the\n"
 																	f"username: {username}\npassword: {password}")
 		if is_ok:
 			try:

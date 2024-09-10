@@ -3,10 +3,6 @@ from tkinter import messagebox
 
 import json
 
-from Cryptodome.SelfTest.Cipher.test_CFB import file_name
-from numpy.ma.core import identity
-from sqlalchemy.testing.config import ident
-
 from password_generator import generator
 
 FONT = ("Courier", 12)
@@ -27,8 +23,8 @@ def save_data():
 
 	new_data = {
 		website: {
-			"Username": username,
-			"Password": password
+			"username": username,
+			"password": password
 		}
 	}
 
@@ -42,24 +38,26 @@ def save_data():
 			try:
 				with open(file_name, "r") as file_data:
 					current_data = json.load(file_data)
-					current_data.update(new_data)
 			except FileNotFoundError:
-				to_create_file = messagebox.askokcancel(title="ERROR", message=f"File {file_name} does not exist.\n"
+				to_create_file = messagebox.askokcancel(title="ERROR", message="No Data File Found.\n"
 															  f"Do you want to create it?")
 				if to_create_file:
-					with open("data.json", "w") as file_data:
+					with open(file_name, "w") as file_data:
 						json.dump(new_data, file_data, indent=4)
 			else:
+				current_data.update(new_data)
+
 				with open("data.json", "w") as file_data:
 					json.dump(current_data, file_data, indent=4)
-
-					website_entry.delete(0, END)
-					password_entry.delete(0, END)
+			finally:
+				website_entry.delete(0, END)
+				password_entry.delete(0, END)
 
 
 # ---------------------------- SEARCH FOR USERNAME AND PASSWORD ------------------------------- #
-def search_for_credentials():
+def find_credentials():
 	searched_website = website_entry.get().title()
+
 	if len(searched_website) == 0:
 		messagebox.showinfo(title="Warning", message="Empty entries aren't allowed!")
 	else:
@@ -68,17 +66,30 @@ def search_for_credentials():
 			with open(file_name, "r") as file:
 				credentials_data = json.load(file)
 		except FileNotFoundError:
-			messagebox.showinfo(title="ERROR", message=f"File {file_name} does not exist")
+			messagebox.showinfo(title="ERROR", message=f"No Data File Found.")
 		else:
-			try:
+			if searched_website in credentials_data:
 				website_data = credentials_data[searched_website]
-			except KeyError:
-				messagebox.showinfo(title="ERROR", message=f"You don't have any records for {searched_website} website")
+				username = website_data["username"]
+				password = website_data["password"]
+				messagebox.showinfo(title=f"{searched_website}", message=f"Username: {username}\n"
+																					 f"Password: {password}")
 			else:
-				username = website_data["Username"]
-				password = website_data["Password"]
-				messagebox.showinfo(title=f"{searched_website} credentials", message=f"Username: {username}\n"
-																				 f"Password: {password}")
+				messagebox.showinfo(title="ERROR", message=f"You don't have any records for {searched_website}")
+		finally:
+			website_entry.delete(0, END)
+
+			# try:
+			# 	website_data = credentials_data[searched_website]
+			# except KeyError:
+			# 	messagebox.showinfo(title="ERROR", message=f"You don't have any records for {searched_website} website")
+			# else:
+			# 	username = website_data["username"]
+			# 	password = website_data["password"]
+			# 	messagebox.showinfo(title=f"{searched_website} credentials", message=f"Username: {username}\n"
+			# 																	 f"Password: {password}")
+			# finally:
+			# 	website_entry.delete(0, END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
@@ -112,7 +123,7 @@ generate_btn = Button(text="Generate Pass", font=FONT, width=14, command=generat
 generate_btn.grid(row=3, column=2)
 add_btn = Button(text="Add", font=FONT, width=35, command=save_data)
 add_btn.grid(row=4, column=1, columnspan=2)
-search_btn = Button(text="Search", font=FONT, width=14, command=search_for_credentials)
+search_btn = Button(text="Search", font=FONT, width=14, command=find_credentials)
 search_btn.grid(row=1, column=2)
 
 

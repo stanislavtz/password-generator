@@ -79,17 +79,6 @@ def find_credentials():
 		finally:
 			website_entry.delete(0, END)
 
-			# try:
-			# 	website_data = credentials_data[searched_website]
-			# except KeyError:
-			# 	messagebox.showinfo(title="ERROR", message=f"You don't have any records for {searched_website} website")
-			# else:
-			# 	username = website_data["username"]
-			# 	password = website_data["password"]
-			# 	messagebox.showinfo(title=f"{searched_website} credentials", message=f"Username: {username}\n"
-			# 																	 f"Password: {password}")
-			# finally:
-			# 	website_entry.delete(0, END)
 
 # ---------------------------- UI SETUP ------------------------------- #
 window = Tk()
